@@ -82,7 +82,7 @@ def main():
     # /Wash sir60 D32 090112/
     # /(?P<treatment>)\s(?P<patient>)\s(?P<day>)\s(?P<date>)/
     
-    cols = range(1,13)
+    cols = list(range(1,13))
     rows = "ABCDEFGH"
 
     if options.direction == 'r':
@@ -108,9 +108,9 @@ def main():
 
     # Extract zip to temporary directory; get a list of files
     for n, file in enumerate(files):
-        print "Extracting from `%s`... (%d/%d)" % ( file, n, len(files ) )
+        print("Extracting from `%s`... (%d/%d)" % ( file, n, len(files ) ))
         # Make folder for this zip
-        filetemppath = os.path.join(temppath, file)
+        filetemppath = os.path.abspath(os.path.join(temppath, file))
         makedirsp(filetemppath)
         
         with ZipFile(file, 'r') as myzip:
@@ -125,7 +125,7 @@ def main():
                 matches = dict( sample_re.findall(data) )
                 
                 # Process columnwise / rowwise
-                keys = matches.keys()
+                keys = list(matches.keys())
                 keys = sorted_by(keys, options.direction)
                 
                 # Reset names data; defaultdict allows optional match on formatting string
@@ -144,7 +144,7 @@ def main():
                     for name_re in name_res:
                         name_match = name_re.search( name )
                         if name_match != None:
-                            names.update(  dict( [(m,v) for m,v in name_match.groupdict().items()] ) )
+                            names.update(  dict( [(m,v) for m,v in list(name_match.groupdict().items())] ) )
                             matched = True
                             break # Stop trying patterns
                             
@@ -160,10 +160,15 @@ def main():
                     to_name = options.output_name_pattern % names
                     to_path = options.output_path_pattern % names
                     
-                    (origin, dest ) = os.path.join(filetemppath,from_name), os.path.join( options.target, to_path, to_name)
+                    origin = os.path.join(filetemppath,from_name)
+
+                    dest = os.path.abspath(os.path.join( options.target, to_path, to_name))
+                    dest_dir = os.path.dirname(dest)
+                    print("Origin: {}, dest: {}".format(origin, dest))
+
                     if os.path.exists(origin):
-                        makedirsp( os.path.join( options.target, to_path) )
-                        print "%s -> %s" % (name, dest)
+                        makedirsp(dest_dir)
+                        print("%s -> %s" % (name, dest))
                         shutil.move( origin, dest )
                         
             # Delete temporary files

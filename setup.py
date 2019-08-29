@@ -2,8 +2,8 @@
 # coding=utf-8
 
 import sys
-import distribute_setup
-distribute_setup.use_setuptools()
+#import distribute_setup
+#distribute_setup.use_setuptools()
 
 from setuptools import setup, find_packages
 
@@ -22,8 +22,8 @@ setup(
     version=version_string,
     author='Martin Fitzpatrick',
     author_email='martin.fitzpatrick@gmail.com',
-    url='https://github.com/mfitzp/accura2fcs',
-    download_url='https://github.com/mfitzp/accura2fcs/zipball/master',
+    url='https://github.com/mfitzp/accuri2fcs',
+    download_url='https://github.com/mfitzp/accuri2fcs/zipball/master',
     description='Convert Accuri format flow cytometry files to standard .fcs',
     long_description='Accuri2fcs is a command line program for the conversion of accura .c6 \
         formatted flow cytometry files to standard .fcs. In practise this is relatively \
